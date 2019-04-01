@@ -74,7 +74,7 @@ jQuery(document).ready(function(){
 						var variations = jQuery.parseJSON(jQuery("form.variations_form").attr("data-product_variations"));
 
 						jQuery.each(options_app.items, function(k,v){
-							console.log(this);
+							//console.log(this);
 							jQuery.each(this.options, function(key,value){
 								//console.log(this);
 
@@ -247,7 +247,7 @@ jQuery(document).ready(function(){
 						}
 					});
 
-					console.log(result);
+					//console.log(result);
 
 					jQuery.each(allKeys, function(k,v){
 						var selector = '';
@@ -273,7 +273,7 @@ jQuery(document).ready(function(){
 						});
 						// sanitize_text 영향으로 모든 텍스트를 lowercase 로 변환하고 띄어쓰기는 하이푼(-)으로 변경한다.
 						result = result.replace(/ /gi, '-');
-						console.log(selector+'######'+result.replace(/ /gi, '-'));
+						//console.log(selector+'######'+result.replace(/ /gi, '-'));
 						if(selector.indexOf(result) != -1){
 							//console.log(allKeys[k]);
 							//console.log(this.items);

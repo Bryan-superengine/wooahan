@@ -129,7 +129,7 @@ jQuery(document).ready(function(){
 				var self = this;
 				var origin 	 = self.badges;
 				if(self.searchKeyword){
-					console.log(self.searchKeyword.length);
+					//console.log(self.searchKeyword.length);
 					self.badges = self.badges.filter(function(badge){
 						var result = badge.title.match(self.searchKeyword);
 						if(result){

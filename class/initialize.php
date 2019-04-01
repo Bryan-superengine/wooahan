@@ -16,6 +16,8 @@
 			add_action( 'woocommerce_update_order_item', array( $this, 'wooahan_update_order_item'), 10, 3 );
 			add_filter( 'woocommerce_package_rates', array($this, 'wooahan_hide_shipping_when_free_available'), 100);
 
+			add_action( 'admin_menu', array($this, 'wooahan_shop_order_menu'), 99);
+
 			$badge_use 		= get_option('wc_settings_tab_wooahan_badge_use', true);
 			$badge_position = get_option('wc_settings_tab_wooahan_badge_position', true);
 
@@ -99,9 +101,63 @@
 			}
 
 			add_filter( 'woocommerce_get_settings_pages', array( $this, 'wooahan_get_settings') );
-			add_filter( 'user_can_richedit' , array($this, 'wooahan_rich_edit'), 50 );
 
 			add_filter( 'woocommerce_get_availability', array($this, 'wooahan_remove_available_product_message'), 1, 2);
+		}
+
+
+		public function wooahan_shop_order_menu(){
+
+			$order_controll 	= get_option('wc_settings_tab_wooahan_order_conroll', true);
+			$product_controll 	= get_option('wc_settings_tab_wooahan_product_controll', true);
+
+			$default_callback   = array($this, 'wooahan_shop_order');
+			$default_slug 		= 'wooahan_shop_order';
+			$default_title 		= '주문정보';
+
+			if($order_controll != 'yes'){
+				$default_callback 	= '/edit.php?post_type=product';
+				$default_slug 		= 'wooahan_product_mangage';
+				$default_title 		= '상품관리';
+
+				if($product_controll != 'yes'){
+					$default_callback 	= array($this, 'wooahan_store_management');
+					$default_slug 		= 'wooahan_store_manage';
+					$default_title 		= '재고관리';
+				}
+			}
+
+
+
+			add_menu_page('우아한', '우아한', 'manage_options', $default_slug, $default_callback, plugins_url('/assets/images/wooahan-20px.svg', WOOAHAN__FILE__), 39);
+			add_submenu_page( $default_slug, $default_title, $default_title, 'manage_options', $default_slug );
+			if($default_slug != 'wooahan_store_manage'){
+				add_submenu_page( $default_slug, '재고관리', '재고관리', 'manage_options', 'wooahan_store_manage', array($this, 'wooahan_store_management') );
+			}
+			if($default_slug != 'wooahan_product_manage'){
+				add_submenu_page( $default_slug, '상품관리', '상품관리', 'manage_options', '/edit.php?post_type=product' );
+			}
+			add_submenu_page( $default_slug, '설정', '설정', 'manage_options', '/admin.php?page=wc-settings&tab=wooahan' );
+		}
+
+		public function wooahan_store_management(){
+			echo '다음 버전에서...';
+		}
+
+		public function wooahan_shop_order(){
+			echo '<div class="wrap">';
+
+				ob_start();
+
+					include_once(WOOAHAN_PATH . '/includes/admin/shop.order.php');
+
+				$contents = ob_get_contents();
+
+				ob_get_clean();
+
+				echo $contents;
+
+			echo '</div>';
 		}
 
 
@@ -215,20 +271,22 @@
 		}
 
 		public function wooahan_single_add_div_start(){
+			if($this->can_direct_buy_controll() == true){
+				global $product;
 
-			global $product;
+					if($product->is_type('variable')){
+						$product_type = 'true';
+					} else {
+						$product_type = 'false';
+					}
 
-				if($product->is_type('variable')){
-					$product_type = 'true';
+				echo '<input type="hidden" name="is_variable" value="'.$product_type.'">';
+				echo '<input type="hidden" name="product_id" value="'.$product->get_id().'">';
+				if($product_type == 'true'){
+					echo '<button type="button" class="button direct-buy button-direct-buy" v-on:click="direct_buy">바로구매</button>';
 				} else {
-					$product_type = 'false';
+					echo '<button type="button" class="button direct-buy button-single-direct-buy" v-on:click="direct_buy">바로구매</button>';
 				}
-			echo '<input type="hidden" name="is_variable" value="'.$product_type.'">';
-			echo '<input type="hidden" name="product_id" value="'.$product->get_id().'">';
-			if($product_type == 'true'){
-				echo '<button type="button" class="button direct-buy button-direct-buy" v-on:click="direct_buy">바로구매</button>';
-			} else {
-				echo '<button type="button" class="button direct-buy button-single-direct-buy" v-on:click="direct_buy">바로구매</button>';
 			}
 		}
 
@@ -301,7 +359,7 @@
 			}
 			wp_enqueue_style( 'wooahan-formfields', plugins_url('/assets/css/wooahan.form.fields.css', WOOAHAN__FILE__), '', date('His') );
 			wp_enqueue_script( 'sumoselect', plugins_url('/assets/js/jquery.sumoselect.min.js', WOOAHAN__FILE__), array('jquery') );
-			wp_enqueue_style( 'sumoselect', plugins_url('/assets/css/sumoselect.css') . WOOAHAN__FILE__ );
+			wp_enqueue_style( 'sumoselect', plugins_url('/assets/css/sumoselect.css', WOOAHAN__FILE__ ));
 			wp_enqueue_script( 'wooahan-formfields', plugins_url('/assets/js/wooahan.form.fields.js', WOOAHAN__FILE__), array('jquery'), date('His') );
 				wp_localize_script( 'wooahan-formfields', 'wooahanAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ));
 			wp_enqueue_style( 'wooahan-common', plugins_url('/assets/css/wooahan.common.css', WOOAHAN__FILE__), '', date('His') );
@@ -373,18 +431,21 @@
 				echo '<style>div.updated.notice {display:none}</style>';
 				deactivate_plugins( plugin_basename( WOOAHAN__FILE__ ) );
 			} else {
-				if(isset($_GET['mode']) && $_GET['mode'] == 'classic'){
+				if($this->can_product_controll() == true){
+					if(isset($_GET['mode']) && $_GET['mode'] == 'classic'){
 
-				} else {
-					if( (isset($_GET['mode']) && $_GET['mode'] == 'wooahan') || !isset($_GET['mode']) ){
-						remove_post_type_support('product', 'title');
-						remove_post_type_support('product', 'editor');
-						add_action( 'edit_form_after_title', array($this, 'wooahan_builder_init') );
-						add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts') );
-						add_action( 'admin_footer', array($this, 'admin_footer_function') );
-						add_action( 'admin_head-post.php', array($this, 'wooahan_xhr') );
-						add_action( 'admin_head-post-new.php', array($this, 'wooahan_xhr' ) );
-					}	
+					} else {
+						if( (isset($_GET['mode']) && $_GET['mode'] == 'wooahan') || !isset($_GET['mode']) ){
+							remove_post_type_support('product', 'title');
+							remove_post_type_support('product', 'editor');
+							add_action( 'edit_form_after_title', array($this, 'wooahan_builder_init') );
+							add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts') );
+							add_action( 'admin_footer', array($this, 'admin_footer_function') );
+							add_action( 'admin_head-post.php', array($this, 'wooahan_xhr') );
+							add_action( 'admin_head-post-new.php', array($this, 'wooahan_xhr' ) );
+							add_filter( 'user_can_richedit' , array($this, 'wooahan_rich_edit'), 50 );
+						}	
+					}
 				}
 			}
 		}
@@ -617,6 +678,7 @@
 		public function admin_footer_function(){
 			global $typenow, $pagenow;
 			if(in_array($typenow, array('product')) && in_array($pagenow, array('post.php', 'post-new.php'))){
+				if($this->can_product_controll() == true){
 ?>
 
 			<div id="wooahan-toast" aria-live="polite" aria-atomic="true" style="position:fixed; min-height:84px; top:40px; right:20px; z-index:99999; background:transparent; width:266px; display:none">
@@ -829,37 +891,65 @@
 			  </div>
 			</div>
 <?php
+				}
 			}		
 		}
 
 		public function admin_scripts(){
 			global $typenow, $pagenow;
 			if(in_array($typenow, array('product')) && in_array($pagenow, array('post.php', 'post-new.php'))){
-				wp_enqueue_script('jquery-ui');
-				wp_enqueue_style('jquery-ui');
-				wp_enqueue_script( 'popper', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js' );
-				wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css' );
-				wp_enqueue_script('bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js');
-				wp_enqueue_style( 'fontawesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css' );
-				wp_enqueue_script( 'ckeditor', plugins_url('/ckeditor/ckeditor.js', WOOAHAN__FILE__) );
-				wp_enqueue_style( 'wp-color-picker' );
-				wp_enqueue_script( 'wooahan', plugins_url('/assets/admin/wooahan.js', WOOAHAN__FILE__), array('jquery', 'wp-color-picker'), date('His'), true  );
-				wp_enqueue_style( 'wooahan', plugins_url('/assets/admin/wooahan.css', WOOAHAN__FILE__), '', date('His'));
-				//wp_enqueue_style( 'wooahan-css-toggle', plugins_url('wooahan') . '/assets/css/css.toggle.css' );
-				wp_enqueue_script( 'vueJS', 'https://cdn.jsdelivr.net/npm/vue' );
-				wp_enqueue_script( 'Sortable', plugins_url('/assets/admin/Sortable.min.js', WOOAHAN__FILE__) );
-				wp_enqueue_script( 'vue-sortable', plugins_url('/assets/admin/vue-sortable.js', WOOAHAN__FILE__), array('jquery') );
+				if($this->can_product_controll() == true){
+					wp_enqueue_script('jquery-ui');
+					wp_enqueue_style('jquery-ui');
+					wp_enqueue_script( 'popper', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js' );
+					wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css' );
+					wp_enqueue_script('bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js');
+					wp_enqueue_style( 'fontawesome', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css' );
+					wp_enqueue_script( 'ckeditor', plugins_url('/ckeditor/ckeditor.js', WOOAHAN__FILE__) );
+					wp_enqueue_style( 'wp-color-picker' );
+					wp_enqueue_script( 'wooahan', plugins_url('/assets/admin/wooahan.js', WOOAHAN__FILE__), array('jquery', 'wp-color-picker'), date('His'), true  );
+					wp_enqueue_style( 'wooahan', plugins_url('/assets/admin/wooahan.css', WOOAHAN__FILE__), '', date('His'));
+					//wp_enqueue_style( 'wooahan-css-toggle', plugins_url('wooahan') . '/assets/css/css.toggle.css' );
+					wp_enqueue_script( 'vueJS', 'https://cdn.jsdelivr.net/npm/vue' );
+					wp_enqueue_script( 'Sortable', plugins_url('/assets/admin/Sortable.min.js', WOOAHAN__FILE__) );
+					wp_enqueue_script( 'vue-sortable', plugins_url('/assets/admin/vue-sortable.js', WOOAHAN__FILE__), array('jquery') );
+				}
 			}
 			
+		}
+
+		/**
+		* 우아한 바로구매 활성화 상태 리턴
+		*/
+		public function can_direct_buy_controll(){
+			$direct_buy_controll = get_option('wc_settings_tab_wooahan_direct_buy', true);
+			if($direct_buy_controll == 'yes'){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/**
+		* 우아한 상품관리 활성화 상태 리턴
+		*/
+		public function can_product_controll(){
+			$product_controll 	= get_option('wc_settings_tab_wooahan_product_controll', true);
+			if($product_controll == 'yes'){
+				return true;
+			} else {
+				return false;
+			}
 		}
 
 
 		public function wooahan_builder_init(){
 			global $typenow, $post;
 			if(in_array($typenow, array('product'))){
-				$product 		= wc_get_product( $post->ID );
-				$regular_price  = $product->get_regular_price();
-				$sale_price 	= $product->get_sale_price();
+				$product 			= wc_get_product( $post->ID );
+				$regular_price  	= $product->get_regular_price();
+				$sale_price 		= $product->get_sale_price();
+
 				if($product->is_type('variable')){
 					$regular_price = get_post_meta($post->ID, '_wooahan_regular_price', true);
 					$sale_price    = get_post_meta($post->ID, '_wooahan_sale_price', true);
@@ -867,6 +957,7 @@
 				include_once( WOOAHAN_PATH . 'class/class.badge.php' );
 				include_once( WOOAHAN_PATH . 'includes/admin/edit-product.php');
 				//include_once( WOOAHAN_PATH . 'includes/admin/js-templates/variation.php');
+
 			}
 		}
 	}

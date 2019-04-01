@@ -18,7 +18,7 @@
 ?>
 <div id="wooahan-wrap">
 	<div class="alert alert-secondary alert-dismissible fade show" role="alert">
-	  <strong>기존 상품편집으로 돌아가고 싶다면?</strong> <a href="post.php?post=<?php the_ID();?>&action=edit&mode=classic">여기를 클릭하세요!</a>
+	  <strong>기존 상품편집으로 돌아가고 싶다면?</strong> <a href="/wp-admin/admin.php?page=wc-settings&tab=wooahan">우아한 -> 설정</a>에서 상품등록 활성화를 꺼주시기 바랍니다.
 	  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
 	    <span aria-hidden="true">&times;</span>
 	  </button>

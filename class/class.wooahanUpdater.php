@@ -99,8 +99,8 @@
             // Add our plugin information
             $response->last_updated = $this->githubAPIResult->published_at;
             $response->slug = $this->slug;
-            $response->banners['low'] = 'asdfas.jpg';
-            $response->banners['high'] = 'asfasdf.jpg';
+            $response->banners['low']  = plugins_url('/assets/images/banner-772x250.jpg', WOOAHAN__FILE__);
+            $response->banners['high'] = plugins_url('/assets/images/banner-1500x486.jpg', WOOAHAN__FILE__);
             $response->name = "우아한(Wooahan) 우커머스 주문/옵션관리 플러그인";
             $response->plugin_name  = $this->pluginData["Name"];
             $response->version = $this->githubAPIResult->tag_name;

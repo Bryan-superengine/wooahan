@@ -2,7 +2,6 @@
 	class wooahanOrder {
 
 		function __construct(){
-			add_action( 'admin_menu', array($this, 'wooahan_shop_order_menu'), 99);
 			add_action( 'admin_enqueue_scripts', array($this, 'admin_scripts') );
 			add_action( 'init', array($this, 'wooahan_register_custom_order_status') );
 			add_filter( 'wc_order_statuses', array($this, 'wooahan_custom_order_status') );
@@ -196,34 +195,6 @@
 			));
 
 			return $order_statuses;
-		}
-
-		public function wooahan_shop_order_menu(){
-			add_menu_page('우아한', '우아한', 'manage_options', 'wooahan_shop_order', array($this, 'wooahan_shop_order'), plugins_url('/assets/images/wooahan-20px.svg', WOOAHAN__FILE__), 39);
-			add_submenu_page( 'wooahan_shop_order', '주문정보', '주문정보', 'manage_options', 'wooahan_shop_order' );
-			add_submenu_page( 'wooahan_shop_order', '재고관리', '재고관리', 'manage_options', 'store_management', array($this, 'wooahan_store_management') );
-			add_submenu_page( 'wooahan_shop_order', '상품관리', '상품관리', 'manage_options', '/edit.php?post_type=product' );
-			add_submenu_page( 'wooahan_shop_order', '설정', '설정', 'manage_options', '/admin.php?page=wc-settings&tab=wooahan' );
-		}
-
-		public function wooahan_store_management(){
-			echo '다음 버전에서...';
-		}
-
-		public function wooahan_shop_order(){
-			echo '<div class="wrap">';
-
-				ob_start();
-
-					include_once(WOOAHAN_PATH . '/includes/admin/shop.order.php');
-
-				$contents = ob_get_contents();
-
-				ob_get_clean();
-
-				echo $contents;
-
-			echo '</div>';
 		}
 
 		public function admin_scripts(){

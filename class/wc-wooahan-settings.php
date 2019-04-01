@@ -34,11 +34,12 @@
 
 	        $sections = array(
 	            'basic'         => __( '기본설정', 'wooahan' ),
+	            /*
 	            'msg_template'	=> __( '메세지 템플릿', 'wooahan' ),
 	            'sms'         	=> __( 'SMS 설정', 'wooahan' ),
 	            'kakao'         => __( '카카오 알림톡 설정', 'wooahan' ),
 	            'faq'			=> __( 'FAQ', 'wooahan')
-
+				*/
 	        );
 
 	        return apply_filters( 'woocommerce_get_sections_' . $this->id, $sections );
@@ -128,7 +129,8 @@
 	                        'default' => 'title_below',
 	                        'desc' => '',
 	                        'id'   => 'wc_settings_tab_wooahan_badge_position'
-	                    ),	                    
+	                    ),
+	                    /*
 	                    'wooahan_id' => array(
 	                        'name' => __( '우아한 인증 아이디', 'wooahan' ),
 	                        'type' => 'text',
@@ -141,6 +143,7 @@
 	                        'desc' => '<br><a href="http://wooahan.shop" target="_blank">woooahan.shop</a> 에 로그인 하신 후 발급받은 API KEY 를 기입하시기 바랍니다.<br>(우아한 인증 아이디와 API KEY 는 필수요소 입니다.)',
 	                        'id'   => 'wc_settings_tab_wooahan_wooahan_id'
 	                    ),
+	                    */
 	                    'sweetr_key' => array(
 	                        'name' => __( '스윗트래커 API KEY', 'wooahan' ),
 	                        'type' => 'text',

@@ -105,7 +105,7 @@ jQuery(document).ready(function(){
 							order_ids   : ids
 						},
 						success : function( response ){
-							console.log(response);
+							//console.log(response);
 							if(response.status == 'success'){
 								self.getList();
 							} else {
@@ -171,7 +171,7 @@ jQuery(document).ready(function(){
 						order_id 	: order_id
 					},
 					success : function( response ){
-						console.log(response);
+						//console.log(response);
 						if(response.status == 'success'){
 							var ids = [];
 								ids.push(order_id);							
@@ -199,7 +199,7 @@ jQuery(document).ready(function(){
 						order_id 	: order_id
 					},
 					success : function( response ){
-						console.log(response);
+						//console.log(response);
 						if(response.status == 'success'){
 							self.getList();
 						} else {
@@ -232,13 +232,13 @@ jQuery(document).ready(function(){
 							number 		: number
 						},
 						success : function( response ){
-							console.log(response);
+							//console.log(response);
 							if(response.status == 'success'){
 								self.trackingList = response.data;
 							} else {
 								alert(response.message);
 							}
-							console.log(self.trackingList);
+							//console.log(self.trackingList);
 							jQuery('#trackingModal').find("div.modal-content").find("div.modal-loading-progress").hide();
 						}
 					});	
@@ -294,7 +294,7 @@ jQuery(document).ready(function(){
 			},
 			shippingNumberRegist : function(order_id){
 				var self = this;
-				console.log(order_id);
+				//console.log(order_id);
 				var shippingNumber = jQuery("div.shipping-number-box").find("input.input-shipping-number").val();
 				var shippingCorp   = jQuery("table.shipping-number-table").find("select.select-corp").val();
 				var orderTable 	   = jQuery("table.order-detail-table");
@@ -328,7 +328,7 @@ jQuery(document).ready(function(){
 					addedIds.push(jQuery(this).val());
 				});
 
-				console.log(addedIds);
+				//console.log(addedIds);
 
 				jQuery("div.modal-content").find("div.modal-loading-progress").show();
 				jQuery.ajax({
@@ -343,7 +343,7 @@ jQuery(document).ready(function(){
 						item_ids 	: addedIds
 					},
 					success : function( response ){
-						console.log(response);
+						//console.log(response);
 						if(response.status == 'success'){
 							var ids = [];
 								ids.push(order_id);
@@ -378,7 +378,7 @@ jQuery(document).ready(function(){
 						memo_type 	: memoType
 					},
 					success : function( response ){
-						console.log(response);
+						//console.log(response);
 						if(response.status == 'success'){
 							self.details.memo = response.memo;
 						} else {
@@ -408,7 +408,7 @@ jQuery(document).ready(function(){
 						order_id : order_id
 					},
 					success : function( response ){
-						console.log(response);
+						//console.log(response);
 						if(response.status == 'success'){
 							self.details.memo = response.memo;
 						} else {
@@ -585,7 +585,7 @@ jQuery(document).ready(function(){
 				jQuery("table.search-table").find("input.order-date-start").val(start);
 				jQuery("table.search-table").find("input.order-date-end").val(end);
 
-				console.log(end);
+				//console.log(end);
 			},
 			search : function(){
 				var searchType 		= jQuery("select.select-search-type").val();
@@ -654,7 +654,7 @@ jQuery(document).ready(function(){
 					},
 					success : function( response ){
 						if(response.status == 'success'){
-							console.log(response.data);
+							//console.log(response.data);
 							self.items = response.data;
 							self.count = response.orderCount;
 							self.totalCount = response.count;
@@ -662,7 +662,7 @@ jQuery(document).ready(function(){
 							self.navCount = Math.ceil(self.totalCount / self.posts_per_page);
 							jQuery("input.check-all").prop("checked", false);
 							self.checkToggle();
-							console.log(self.items);
+							//console.log(self.items);
 						}
 						jQuery('#detailModal').on('show.bs.modal').unbind();
 						jQuery('#trackingModal').on('show.bs.modal').unbind();
