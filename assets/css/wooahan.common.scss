@@ -1,0 +1,152 @@
+div#wooahan-order-pay {
+	display:block;
+	font-size:13px;
+	line-height:1;
+	font-family:나눔고딕, NanumGothic, 맑은고딕, MalgunGothic, 돋움, Dotum, Helvetica, "Apple SD Gothic Neo", sans-serif;
+	table.wooahan-order-pay-table {
+		border-collapse:collapse;
+		border:1px solid #e0e0e0;
+		margin-bottom:10px;
+		thead {
+			tr {
+				th {
+					border:0;
+					border-bottom:1px solid #f1f1f1;
+					font-weight:normal;
+					font-size:12px;
+					text-align:center;
+					background:#f5f5f5;
+					padding:20px 0;
+				}
+				th.product-thumbnail {
+					width:150px;
+				}
+			}
+		}
+		tbody {
+			tr {
+				td {
+					border:0;
+					text-align:center;
+					color:#6a6a6a;
+					padding:30px 0;
+					vertical-align:middle;
+				}
+				td.product-thumbnail {
+					img {
+						display:inline-block;
+						border-radius:50%;
+						max-width:90px;
+					}
+				}
+				td.product-name {
+					text-align:left;
+					p.product-title {
+						color:#333;
+						font-size:14px;
+						font-weight:bold;
+						margin-bottom:10px;
+					}
+					ul {
+						list-style:none;
+						margin:0;
+						padding:0;
+					}
+					div.options {
+						display:block;
+						label {
+							float:left;
+							display:inline-block;
+							background:#00b5d3;
+							color:#fff;
+							padding:3px 5px;
+							font-size:12px;
+						}
+						ul {
+							margin-left:38px;
+							position:relative;
+							top:3px;
+							li {
+								display:block;
+								font-size:12px;
+								&+li {
+									margin-top:6px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	div.order-total {
+		display:block;
+		border:1px solid #e0e0e0;
+		box-sizing:border-box;
+		padding:30px;
+		min-height:110px;
+		text-align:right;
+		div.total-price {
+			float:left;
+			text-align:left;
+			label {
+				display:block;
+				margin-bottom:10px;
+				font-weight:bold;
+			}
+			span.price {
+				font-size:30px;
+				font-family:Tahoma, Helvetica, 나눔고딕, 'Nanum Gothic', 나눔스퀘어, 'Nanum Square', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif';
+				font-weight:bold;
+			}
+		}
+		div.price-details {
+			display:inline-block;
+			width:180px;
+			position:relative;
+			top:8px;
+			ul {
+				list-style:none;
+				margin:0;
+				padding:0;
+				li {
+					display:block;
+					&+li {
+						margin-top:8px;
+					}
+					label {
+						float:left;
+						text-align:left;
+						width:100px;
+						color:#6a6a6a;
+					}
+					span.price {
+						color:#6a6a6a;
+						font-family:Tahoma, Helvetica, 나눔고딕, 'Nanum Gothic', 나눔스퀘어, 'Nanum Square', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif';
+					}
+				}
+			}
+		}
+	}
+	div#wooahan-payment {
+		display:block;
+		div.form-agree {
+			display:block;
+			padding:20px 0;
+		}
+		ul.methods {
+			list-style:none;
+			margin:0;
+			padding:20px;
+			box-sizing:border-box;
+			border:1px solid #e0e0e0;
+			background:#fff;
+			li {
+				display:inline-block;
+				&+li {
+					margin-left:20px;
+				}
+			}
+		}
+	}
+}
