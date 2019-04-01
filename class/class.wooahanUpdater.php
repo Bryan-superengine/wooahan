@@ -93,12 +93,15 @@
             $this->getRepoReleaseInfo();
 
             if ( empty( $response->slug ) || $response->slug != $this->slug ){
-                return $false;
+                return false;
             }
 
             // Add our plugin information
             $response->last_updated = $this->githubAPIResult->published_at;
             $response->slug = $this->slug;
+            $response->banners['low'] = 'asdfas.jpg';
+            $response->banners['high'] = 'asfasdf.jpg';
+            $response->name = "우아한(Wooahan) 우커머스 주문/옵션관리 플러그인";
             $response->plugin_name  = $this->pluginData["Name"];
             $response->version = $this->githubAPIResult->tag_name;
             $response->author = $this->pluginData["AuthorName"];
@@ -121,7 +124,7 @@
 
             // Create tabs in the lightbox
             $response->sections = array(
-                    'Description'   => $this->pluginData["Description"],
+                    '설명'   => $this->pluginData["Description"],
                     'changelog'     => class_exists( "Parsedown" )
                             ? Parsedown::instance()->parse( $this->githubAPIResult->body )
                             : $this->githubAPIResult->body
