@@ -6,7 +6,7 @@
  * Version: 0.0.1
  * Author : Mr. Bryan Lee
  * Author URI: http://superengine.io
- * License: GPL2
+ *
  *
  * Text Domain: wooahan
  *
@@ -19,6 +19,7 @@ define( 'WOOAHAN_PLUGIN_BASE', plugin_basename( WOOAHAN__FILE__ ) );
 define( 'WOOAHAN_PATH', plugin_dir_path( WOOAHAN__FILE__ ) );
 
 require_once( WOOAHAN_PATH . 'class/initialize.php' );
+require_once( WOOAHAN_PATH . 'class/class.wooahanUpdater.php' );
 require_once( WOOAHAN_PATH . 'class/class.shopOrder.php' );
 require_once( WOOAHAN_PATH . 'class/class.orderList.php' );
 require_once( WOOAHAN_PATH . 'class/class.orderTracking.php' );
