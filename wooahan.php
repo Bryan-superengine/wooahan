@@ -3,7 +3,7 @@
  * Plugin Name: Wooahan
  * Description: 우커머스의 상품 등록부터 택배발송, 주문처리까지 보다 직관적인 UI 와 한국 실정에 맞는 다양한 기능이 들어 있습니다.
  * Plugin URI: http://superengine.io/wooahan/
- * Version: 0.0.1
+ * Version: 0.0.2
  * Author : Mr. Bryan Lee
  * Author URI: http://superengine.io
  *
