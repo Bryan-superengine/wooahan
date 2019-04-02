@@ -1,5 +1,5 @@
 <div class="wooahan-footer">
-	<div class="wooahan-logo"><img src="<?php echo plugins_url('/assets/images/wooahan-white-logo.svg', WOOAHAN__FILE__);?>"> <img src="<?php echo plugins_url('/assets/images/superengine-w.svg', WOOAHAN__FILE__);?>" style="opacity:0.8"></div>
+	<div class="wooahan-logo"><img src="<?php echo plugins_url('/assets/images/wooahan-white-logo.svg', WOOAHAN__FILE__);?>"> <a href="http://superengine.io" target="_blank"><img src="<?php echo plugins_url('/assets/images/superengine-w.svg', WOOAHAN__FILE__);?>" style="opacity:0.8"></a></div>
 	<div class="footer-contents">
 		<ul>
 			<li><strong>주식회사 슈퍼엔진</strong></li>

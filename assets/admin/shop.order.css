@@ -670,7 +670,7 @@ div#wooahanShopOrder {
   div#wooahanShopOrder div.wooahan-footer div.wooahan-logo img {
     width: 120px;
     height: auto; }
-  div#wooahanShopOrder div.wooahan-footer div.wooahan-logo img + img {
+  div#wooahanShopOrder div.wooahan-footer div.wooahan-logo img + a {
     margin-left: 10px; }
   div#wooahanShopOrder div.wooahan-footer div.footer-contents {
     display: block;
