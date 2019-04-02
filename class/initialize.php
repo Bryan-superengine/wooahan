@@ -4,8 +4,6 @@
 			register_activation_hook( WOOAHAN__FILE__, array($this, 'create_wooahan_data'));
 			add_action( 'admin_init', array($this, 'activation_error'), 99 );
 			add_action( 'save_post_product', array($this, 'wooahan_ajax_save') );
-			add_filter( 'woocommerce_dropdown_variation_attribute_options_args', array($this, 'wooahan_dropdown_variation_args') );
-			add_filter( 'woocommerce_dropdown_variation_attribute_options_html', array($this, 'wooahan_dropdown_variation'), 10, 2);
 			add_filter( 'woocommerce_locate_template', array($this, 'wooahan_woocommerce_locate_template'), 10, 3 );
 			add_action( 'wp_enqueue_scripts', array($this, 'wooahan_scripts') );
 			add_shortcode('wooahan_address_fields', array($this, 'wooahan_address_fields') );
@@ -530,6 +528,29 @@
 				update_option('wooahan_form_fields_id', $post_id);
 			}
 
+
+			/**
+			* 초기 우커머스 우아한 탭 설정
+			*/
+			if(!get_option('wc_settings_tab_wooahan_product_controll', true)){
+				update_option( 'wc_settings_tab_wooahan_product_controll', 'yes' );			// 우아한 상품등록 활성화
+			}
+			if(!get_option('wc_settings_tab_wooahan_order_controll', true)){
+				update_option( 'wc_settings_tab_wooahan_order_controll', 'yes' ); 			// 우아한 주문관리 활성화
+			}
+			if(!get_option('wc_settings_tab_wooahan_direct_buy', true)){
+				update_option( 'wc_settings_tab_wooahan_direct_buy', 'yes' );				// 우아한 바로구매 활성화
+			}
+			if(!get_option('wc_settings_tab_wooahan_badge_user', true)){
+				update_option( 'wc_settings_tab_wooahan_badge_user', 'both' );				// 우아한 뱃지 사용
+			}
+			if(!get_option('wc_settings_tab_wooahan_badge_position', true)){
+				update_option( 'wc_settings_tab_wooahan_badge_position', 'price_above' );	// 기본 뱃지 위치
+			}			
+			if(!get_option('wc_settings_tab_wooahan_sweettracker_delay', true)){
+				update_option( 'wc_settings_tab_wooahan_sweettracker_delay', 3 );			// API Connection delay hour
+			}			
+
 			$charset_collate = $wpdb->get_charset_collate();
 			$table_name = $wpdb->prefix.'wooahan_shipping_data';
 			$sql = "CREATE TABLE ".$table_name." (
@@ -597,33 +618,6 @@
 				
 			return $template;
 		}
-
-		/**
-		* 우커머스 variation html
-		*
-		*/
-		public function wooahan_dropdown_variation( $html, $args ){
-			$type = 1; // type 1 : 조합 일체선택형, type 2 : 조합 분리선택형, type 3 : 독립 선택형
-
-			$html  = '<select>';
-			$html .= '<option selected>asdf</option>';
-			$html .= '</select>';
-
-			return $html;
-
-		}
-
-		/**
-		* 우커머스 variation dropdown (select box) 배열 변경
-		* https://docs.woocommerce.com/wc-apidocs/source-function-wc_dropdown_variation_attribute_options.html#2362-2421
-		*
-		*/
-		public function wooahan_dropdown_variation_args($args){
-			$args['show_option_none'] = '뽕이다.';
-			return $args;
-		}
-
-
 
 		public function activation_error(){
 			if( !class_exists( 'Woocommerce') ){

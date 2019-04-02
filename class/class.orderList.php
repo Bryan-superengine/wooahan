@@ -289,12 +289,12 @@
 						'item_total'		=> number_format($this->getOrderItem($_order, 'total')),
 						'user_id'			=> $_order->get_user_id(),
 						'customer'			=> array(
-							'name'	=> $_order->billing_first_name.' '.$_order->billing_last_name,
+							'name'	=> $_order->get_billing_first_name().' '.$_order->get_billing_last_name(),
 							'phone' => $_order->get_billing_phone(),
 							'address' => $_order->get_billing_address_1().' '.$_order->get_billing_address_2(),
-							'message' => $_order->customer_message
+							'message' => $_order->get_customer_note()
 						),
-						'customer_name'		=> $_order->billing_first_name.' '.$_order->billing_last_name,
+						'customer_name'		=> $_order->get_billing_first_name().' '.$_order->get_billing_last_name(),
 						'quantity'			=> number_format($this->getOrderItem($_order, 'quantity')),
 						'order_status'		=> $order_status,
 						'currency'			=> $_order->get_currency(),
@@ -328,6 +328,7 @@
 		        AND `comment_approved` = 1  
 		        ORDER BY comment_date DESC 
 		    ");
+		    $order_note = array();
 		    foreach($results as $note){
 				$is_customer_note = get_comment_meta($note->comment_ID, 'is_customer_note', true);
 				if($is_customer_note == '1'){

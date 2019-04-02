@@ -776,7 +776,7 @@ div#wooahan-wrap div.wooahan-footer div.wooahan-logo img {
 	height:auto;
 }
 
-div#wooahan-wrap div.wooahan-footer div.wooahan-logo img + img {
+div#wooahan-wrap div.wooahan-footer div.wooahan-logo img + a {
 	margin-left:10px;
 }
 

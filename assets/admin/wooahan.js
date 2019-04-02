@@ -259,7 +259,7 @@ jQuery(document).ready(function(){
 		addedArray.push(terms);
 	});
 
-	console.log(addedArray);
+	//console.log(addedArray);
 	var category_app = new Vue({
 		el : '#category-table',
 		data: {
@@ -307,7 +307,7 @@ jQuery(document).ready(function(){
 					case 1 :
 						this.checkedFirst = term_id;
 						if(secondData.length == 0){
-							console.log(this.isExist(term_id));
+							//console.log(this.isExist(term_id));
 							if(this.isExist(term_id) == false){
 								this.addedCategories.push( [ term_id ] );
 								//console.log(this.checkedFirst);
@@ -325,7 +325,7 @@ jQuery(document).ready(function(){
 						this.checkedSecond = term_id;
 						if(thirdData.length == 0){	
 							if(this.isExist(term_id) == false){
-								console.log('second');
+								//console.log('second');
 								this.addedCategories.push( [this.checkedFirst, term_id ]);
 								//console.log(this.checkedFirst+'-'+this.checkedSecond);
 								jQuery("table#category-table").find("li").removeClass("active");
@@ -357,7 +357,7 @@ jQuery(document).ready(function(){
 				self.added = {};
 				var addedArray = [];
 				jQuery.each(self.addedCategories, function(k,v){
-					console.log(self.addedCategories);
+					//console.log(self.addedCategories);
 					var values = [];
 					jQuery.each(this, function(key, value){
 						//console.log(category_app.getTerm(value));
@@ -387,7 +387,7 @@ jQuery(document).ready(function(){
 						}
 					});
 				});
-				console.log(duplicated);
+				//console.log(duplicated);
 				if(duplicated == 0){
 					return false;
 				} else {
@@ -397,7 +397,7 @@ jQuery(document).ready(function(){
 			},
 			remove : function(this_key){
 				//jQuery("span.selected-categories").find("li.cat-key-"+this_key).remove();
-				console.log(this.added);
+				//console.log(this.added);
 				this.addedCategories.splice(this_key*1, 1);
 				this.added.splice(this_key*1, 1);
 				//console.log(this.addedCategories);

@@ -144,8 +144,8 @@ function wooahan_create_variations(){
     $sale_price     = sanitize_text_field($_POST['sale_price']);
 
     /* data */
-    isset($wooahan['attributes'])       ? $attributes       = sanitize_text_field($wooahan['attributes'])            : $attributes       = '';
-    isset($wooahan['merge_type'])       ? $merge_type       = sanitize_text_field($wooahan['merge_type'])            : $merge_type       = 'merge_sep';
+    isset($wooahan['attributes'])       ? $attributes       = $wooahan['attributes']            : $attributes       = '';
+    isset($wooahan['merge_type'])       ? $merge_type       = $wooahan['merge_type']            : $merge_type       = 'merge_sep';
 
     if(isset($output['post_ID'])){
         $post_id = $output['post_ID'];
@@ -198,7 +198,6 @@ function wooahan_create_variations(){
                 $existing_attributes = array();
 
                 foreach ( $existing_variations as $existing_variation ) {
-                    $test = 'exisiting_variations_ok';
                     $existing_attributes[] = $existing_variation->get_attributes();
                 }
 
@@ -209,12 +208,13 @@ function wooahan_create_variations(){
                     if ( in_array( $possible_attribute, $existing_attributes ) ) {
                         continue;
                     }
-                    $test = 'possible_attributes_ok';
                     $variation = new WC_Product_Variation();
                     $variation->set_parent_id( $post_id );
                     $variation->set_attributes( $possible_attribute );
 
                     $variation_id = $variation->get_id();
+
+                    wp_update_post($variation_post);
 
                     do_action( 'product_variation_linked', $variation->save() );
 
@@ -692,9 +692,9 @@ function wooahan_shipping_number_regist(){
     $shipping        = new wooahanShipping();
     $order_id        = sanitize_text_field($_POST['order_id']);
     $data_args       = array(
-        'code'      => sanitize_text_field($_POST['corp']),
-        'number'    => sanitize_text_field($_POST['number']),
-        'item_ids'  => sanitize_text_field($_POST['item_ids'])
+        'code'      => $_POST['corp'],
+        'number'    => $_POST['number'],
+        'item_ids'  => $_POST['item_ids']
     );
     $return = $shipping->Regist($order_id, $data_args);
 
@@ -1111,9 +1111,12 @@ function wooahan_direct_buy(){
 
 
         foreach($variations as $variation){
-            $_product = get_product($variation['variation_id']);
+            $variation_id       = $variation['variation_id'];
+            $_product           = get_product($variation_id);
+            $single_variation   = new WC_Product_Variation( $variation_id );
+            $name               = implode("/", $single_variation->get_variation_attributes());
             $args = array(
-                'name' => $_product->get_name(),
+                'name' => $name,
                 'tax_class' => $_product->get_tax_class(),
                 'product_id' => $product_id,
                 'variation_id' => $variation['variation_id'],
@@ -1418,8 +1421,10 @@ function create_product_variation( $product_id, $variation_data ){
     $variation = new WC_Product_Variation( $variation_id );
 
     // Iterating through the variations attributes
+    $names = array();
     foreach ($variation_data['attributes'] as $attribute => $term_name )
     {
+        $names[] = $attributes;
         $taxonomy = 'pa_'.$attribute; // The attribute taxonomy
 
         // If taxonomy doesn't exists we create it (Thanks to Carl F. Corneil)
@@ -1467,6 +1472,7 @@ function create_product_variation( $product_id, $variation_data ){
         $variation->set_sale_price( $variation_data['sale_price'] );
     }
     $variation->set_regular_price( $variation_data['regular_price'] );
+    $variation->set_name( join("/", $names) );
 
     // Stock
     if( ! empty($variation_data['stock_qty']) ){
