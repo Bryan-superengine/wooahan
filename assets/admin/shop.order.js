@@ -297,6 +297,7 @@ jQuery(document).ready(function(){
 				//console.log(order_id);
 				var shippingNumber = jQuery("div.shipping-number-box").find("input.input-shipping-number").val();
 				var shippingCorp   = jQuery("table.shipping-number-table").find("select.select-corp").val();
+				var shippingText   = jQuery("table.shipping-number-table").find("select.select-corp").children("option").filter(":selected").text();
 				var orderTable 	   = jQuery("table.order-detail-table");
 				var itemCount 	   = orderTable.find("input.each-check").length;
 				var addedIds 	   = [];
@@ -314,12 +315,12 @@ jQuery(document).ready(function(){
 					return false;
 				}
 				if(itemCount != orderTable.find("input.each-check:checked").length){
-					if(confirm("택배사 : "+shippingCorp+"\n기입하신 운송장번호 : "+shippingNumber+"\n\n전체 상품 중 일부를 선택하셨습니다. 선택된 상품만 배송처리 하시겠습니까?\n부분배송으로 처리되며 상단 부분배송 조회에서 확인 가능합니다.") == false){
+					if(confirm("택배사 : "+shippingText+"\n기입하신 운송장번호 : "+shippingNumber+"\n\n전체 상품 중 일부를 선택하셨습니다. 선택된 상품만 배송처리 하시겠습니까?\n부분배송으로 처리되며 상단 부분배송 조회에서 확인 가능합니다.") == false){
 						return false
 					}
 				}
 				if(itemCount == orderTable.find("input.each-check:checked").length){
-					if(confirm("택배사 : "+shippingCorp+"\n기입하신 운송장번호 : "+shippingNumber+"\n\n위 정보로 송장등록 및 배송처리 하시겠습니까?") == false){
+					if(confirm("택배사 : "+shippingText+"\n기입하신 운송장번호 : "+shippingNumber+"\n\n위 정보로 송장등록 및 배송처리 하시겠습니까?") == false){
 						return false;
 					}	
 				}
@@ -349,6 +350,7 @@ jQuery(document).ready(function(){
 								ids.push(order_id);
 							self.details.shipping_number = response.shipping_number;
 							self.getList();
+							jQuery("#detailModal").modal('hide');
 						} else {
 							alert(response.message);
 						}
@@ -656,6 +658,7 @@ jQuery(document).ready(function(){
 						if(response.status == 'success'){
 							//console.log(response.data);
 							self.items = response.data;
+							console.log(response.data);
 							self.count = response.orderCount;
 							self.totalCount = response.count;
 							self.listCount = self.size(response.data);

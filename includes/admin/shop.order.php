@@ -1,6 +1,7 @@
 <?php
 	if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-	
+			$limit[0] = 1;
+			$limit[1] = 20;	
 	$orderList = new wooahanOrderList();
 	$trackingCompanies = $orderList->get_tracking_companies();
 	$orderCount 	   = $orderList->get_order_count();
