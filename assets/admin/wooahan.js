@@ -241,8 +241,6 @@ jQuery(document).ready(function(){
 	var categoriesData   = jQuery.parseJSON(jQuery("table#category-table").find("tbody.cat-tbody").attr("data-cat"));
 	var addedTerms 		 = jQuery.parseJSON(jQuery("table#category-table").find("tbody.cat-tbody").attr("added-terms"));
 
-	//console.log(addedTerms);
-
 	var firstData 		 = [];
 	var secondData 		 = [];
 	var thirdData 		 = [];
@@ -252,8 +250,16 @@ jQuery(document).ready(function(){
 			firstData.push(this);
 		}
 	});
+	var addedArray = [];
+	jQuery.each(addedTerms, function(k,v){
+		var terms = [];
+		jQuery.each(this, function(k,v){
+			terms.push(v);
+		});
+		addedArray.push(terms);
+	});
 
-	//console.log(categoriesData);
+	console.log(addedArray);
 	var category_app = new Vue({
 		el : '#category-table',
 		data: {
@@ -269,8 +275,15 @@ jQuery(document).ready(function(){
 			checkedThird : 0,
 			checkedIds : 0
 		},
+		mounted(){
+			
+			this.addedCategories = addedArray;
+			this.regist();
+			//console.log(this.addedCategories);
+		},
 		methods : {
 			checkNext : function(type, term_id){
+				var self = this;
 				jQuery("table#category-table").find("li.each-cat-"+term_id).parent().find("li").removeClass("active");
 				jQuery("table#category-table").find("li.each-cat-"+term_id).addClass("active");
 				secondData 		= [];
@@ -289,15 +302,17 @@ jQuery(document).ready(function(){
 						}
 					}
 				});
-
+				var changed = 0;
 				switch(type){
 					case 1 :
 						this.checkedFirst = term_id;
 						if(secondData.length == 0){
+							console.log(this.isExist(term_id));
 							if(this.isExist(term_id) == false){
 								this.addedCategories.push( [ term_id ] );
 								//console.log(this.checkedFirst);
 								jQuery("table#category-table").find("li").removeClass("active");
+								self.regist();
 							}
 							this.items.second = [];
 							this.items.third  = [];
@@ -310,9 +325,11 @@ jQuery(document).ready(function(){
 						this.checkedSecond = term_id;
 						if(thirdData.length == 0){	
 							if(this.isExist(term_id) == false){
+								console.log('second');
 								this.addedCategories.push( [this.checkedFirst, term_id ]);
 								//console.log(this.checkedFirst+'-'+this.checkedSecond);
 								jQuery("table#category-table").find("li").removeClass("active");
+								self.regist();
 							}
 							this.items.third = [];
 						} else {
@@ -325,24 +342,30 @@ jQuery(document).ready(function(){
 						if(this.isExist(term_id) == false){	
 							this.addedCategories.push( [ this.checkedFirst, this.checkedSecond, term_id ] );
 							jQuery("table#category-table").find("li").removeClass("active");
-							//console.log(this.checkedFirst+'-'+this.checkedSecond+'-'+this.checkedThird);
+							self.regist();
+							changed = 1;
 						}
 					break;
 				}
 
-				this.added = [];
-				
-				jQuery.each(this.addedCategories, function(k,v){
-					category_app.added[k] = [];
-					category_app.added[k]['cats'] = [];
+
+				//console.log(self.added);
+
+			},
+			regist : function(){
+				var self = this;
+				self.added = {};
+				var addedArray = [];
+				jQuery.each(self.addedCategories, function(k,v){
+					console.log(self.addedCategories);
+					var values = [];
 					jQuery.each(this, function(key, value){
 						//console.log(category_app.getTerm(value));
-						category_app.added[k]['cats'].push( category_app.getTerm(value) );
+						values.push( self.getTerm(value) );
 					});
+					addedArray.push({'cats' : values});
 				});
-
-				//console.log(this.added);
-
+				self.added = addedArray;
 			},
 			getTerm : function(term_id){
 				var returnData = [];
@@ -357,13 +380,14 @@ jQuery(document).ready(function(){
 			isExist : function(term_id){
 				var duplicated = 0;
 				jQuery.each(this.addedCategories, function(k,v){
+					//console.log(v);
 					jQuery.each(this, function(key, value){
 						if(value == term_id){
 							duplicated++;
 						}
 					});
 				});
-				//console.log(duplicated);
+				console.log(duplicated);
 				if(duplicated == 0){
 					return false;
 				} else {
@@ -373,7 +397,7 @@ jQuery(document).ready(function(){
 			},
 			remove : function(this_key){
 				//jQuery("span.selected-categories").find("li.cat-key-"+this_key).remove();
-				//console.log(this_key);
+				console.log(this.added);
 				this.addedCategories.splice(this_key*1, 1);
 				this.added.splice(this_key*1, 1);
 				//console.log(this.addedCategories);
@@ -1249,18 +1273,17 @@ jQuery(document).ready(function(){
 			multiple : false
 		}).on('select', function(){
 			var attachment = custom_uploader.state().get('selection').first().toJSON();
-			button.parent().parent().parent().parent().find("div.uploaded-image").find("div.col").html('<img src="'+attachment.url+'"><input type="hidden" name="wooahan[thumbnail]" value="'+attachment.id+'">');
-			button.parent().parent().parent().hide();
-			button.parent().parent().parent().parent().find("div.uploaded-image").find("p.h5").show();
-			button.parent().parent().parent().parent().find("div.button-row").show();
+			jQuery("table.product-setting-table").find("div.uploaded-thumbnail").find("div.col").html('<img src="'+attachment.url+'"><input type="hidden" name="wooahan[thumbnail]" value="'+attachment.id+'">');
+			jQuery("table.product-setting-table").find("div.uploaded-thumbnail").find("p.h5").show();
+			jQuery("table.product-setting-table").find("div.button-row").show();
 		}).open();
 	});
 
 	jQuery("button.btn-thumbnail-remove").click(function(){
-		jQuery("div.col-4").find("div.uploaded-image").find("div.col").html('');
-		jQuery("div.col-4").find("div.uploaded-image").find("p.h5").hide();
-		jQuery("div.col-4").find("div.button-row").hide();
-		jQuery("div.col-4").find("div.empty-row").show();
+		jQuery("table.product-setting-table").find("div.uploaded-thumbnail").find("div.col").html('');
+		jQuery("table.product-setting-table").find("div.uploaded-thumbnail").find("p.h5").hide();
+		jQuery("table.product-setting-table").find("div.button-row").hide();
+		jQuery("table.product-setting-table").find("div.empty-row").show();
 	});
 
 	jQuery("button.btn-tags-add").click(function(){

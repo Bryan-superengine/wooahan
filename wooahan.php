@@ -23,6 +23,7 @@ require_once( WOOAHAN_PATH . 'class/class.wooahanUpdater.php' );
 require_once( WOOAHAN_PATH . 'class/class.shopOrder.php' );
 require_once( WOOAHAN_PATH . 'class/class.orderList.php' );
 require_once( WOOAHAN_PATH . 'class/class.orderTracking.php' );
-require_once( WOOAHAN_PATH . '/class/class.shipping.php' );
+require_once( WOOAHAN_PATH . 'class/class.shipping.php' );
 require_once( WOOAHAN_PATH . 'functions.php' );
 require_once( WOOAHAN_PATH . 'class/class.badge.php' );
+require_once( WOOAHAN_PATH . 'class/class-tgm-plugin-activation.php' );

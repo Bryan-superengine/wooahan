@@ -106,14 +106,9 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 	<?php
 		$terms 		= get_the_terms($post->ID, 'product_cat');
 		$all_terms 	= get_terms( 'product_cat', array( 'hide_empty' => false, 'fields' => 'all' ) );
-		$first_arr  = array();
-		foreach($terms as $key => $term){
-			if($term->parent == 0){
-				$first_arr[$term->term_id][] = $term;
-			}
-		}
+		$added_cats = get_post_meta($post->ID, 'wooahan_product_cats', true);
 	?>	
-						<tbody class="cat-tbody" data-cat='<?php echo json_encode($all_terms);?>' added-terms='<?php echo json_encode($terms);?>'>
+						<tbody class="cat-tbody" data-cat='<?php echo json_encode($all_terms);?>' added-terms='<?php echo json_encode($added_cats);?>'>
 
 							<tr>
 								<td class="cat-first-td">						
@@ -149,7 +144,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 										<ul>
 										<template v-for="(item, key) in added">
 											<li v-bind:class="'cat-key-'+key">
-												<span class="selected" v-for="(item, k) in item.cats">{{ item.name }} <input type="hidden" name="wooahan[cat][]" v-bind:value="item.term_id"></span> <button type="button" class="button" v-on:click="remove(key)"><? _e('삭제', 'wooahan');?></button>
+												<span class="selected" v-for="(item, k) in item.cats">{{ item.name }} <input type="hidden" v-bind:name="'wooahan[cat]['+key+'][]'" v-bind:value="item.term_id"></span> <button type="button" class="button" v-on:click="remove(key)"><? _e('삭제', 'wooahan');?></button>
 											</li>
 										</template>
 										</ul>

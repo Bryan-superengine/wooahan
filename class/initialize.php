@@ -18,6 +18,10 @@
 
 			add_action( 'admin_menu', array($this, 'wooahan_shop_order_menu'), 99);
 
+			add_action( 'admin_init', array($this, 'wooahan_setup_wizard') );
+
+			add_action( 'tgmpa_register', array($this, 'wooahan_register_required_plugins') );
+
 			$badge_use 		= get_option('wc_settings_tab_wooahan_badge_use', true);
 			$badge_position = get_option('wc_settings_tab_wooahan_badge_position', true);
 
@@ -103,6 +107,202 @@
 			add_filter( 'woocommerce_get_settings_pages', array( $this, 'wooahan_get_settings') );
 
 			add_filter( 'woocommerce_get_availability', array($this, 'wooahan_remove_available_product_message'), 1, 2);
+		}
+
+		public function wooahan_register_required_plugins(){
+			$plugins = array(
+				array(
+					'name'      => '우커머스',
+					'slug'      => 'woocommerce',
+					'required'  => true,
+				),
+				array(
+					'name' 		=> '아임포트 결제플러그인 for 우커머스',
+					'slug'		=> 'iamport-for-woocommerce',
+					'required'	=> true
+				)
+			);
+			$config = array(
+				'id'           => 'wooahan',                 // Unique ID for hashing notices for multiple instances of TGMPA.
+				'default_path' => '',                      // Default absolute path to bundled plugins.
+				'menu'         => 'tgmpa-install-plugins', // Menu slug.
+				'parent_slug'  => 'plugins.php',            // Parent menu slug.
+				'capability'   => 'manage_options',    // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
+				'has_notices'  => true,                    // Show admin notices or not.
+				'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
+				'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
+				'is_automatic' => false,                   // Automatically activate plugins after installation or not.
+				'message'      => '',                      // Message to output right before the plugins table.
+			);
+			tgmpa( $plugins, $config );
+		}
+
+		/**
+		* 우아한 플러그인 첫 활성화시 setup wizard 노출
+		*/
+		public function wooahan_setup_wizard(){
+		    if ( get_option( 'wooahan_setup_wizard_notice') ) {
+		        delete_option( 'wooahan_setup_wizard_notice' );
+		        add_action( "admin_notices", array($this, "wooahan_setup_wizard_notice" ));
+		    }
+		}
+
+		public function get_required_plugins_count(){
+			$required = $this->get_required_plugins();
+			$count = 0;
+			foreach($required as $req){
+				if($req['status'] == false){
+					$count++;
+				}
+			}
+			return $count;
+		}
+
+		/**
+		* 우아한 플러그인 동작을 위해 필요한 선행 설치 플러그인 리스트
+		*/
+		public function get_required_plugins(){
+
+			$required = array();
+
+			$required['woocommerce'] = array(
+				'title' => '우커머스가 반드시 설치되어 있어야 합니다.',
+				'description' => '우아한은 우커머스를 기반으로 동작하는 플러그인 입니다. 반드시 사전에 먼저 설치 되어 있어야 합니다.',
+				'status' => false
+			);
+
+			$required['iamport'] = array(
+				'title' => '아임포트 결제플러그인이 설치되어 있어야 합니다.',
+				'description' => '우아한은 원할한 결제를 위한 아임포트 결제플러그인을 사용합니다.',
+				'status' => false
+			);
+
+			if( class_exists( 'woocommerce') ){
+				$required['woocommerce']['status'] = true;
+			}
+
+			if( class_exists( 'Base_Gateway_Iamport') ){
+				$required['iamport']['status'] = true;
+			}
+
+			return $required;
+
+		}
+
+		public function wooahan_setup_wizard_notice(){
+
+			$required_list = $this->get_required_plugins();
+			
+			if($this->get_required_plugins_count() > 0){
+				$ptext = __('정상적인 사용을 위해 아래의 사항들이 반드시 필수적으로 선행되어야 합니다.<br>
+						필수 요소들을 먼저 설치하시고 우아한 플러그인을 다시 활성화 해주시기 바랍니다.', 'wooahan');
+			} else {
+				$ptext = __('좋습니다! 이제 다음단계로 진행할 수 있습니다!<br>하단의 기본설정 바로가기 버튼을 눌러 기본정보를 기입하시기 바랍니다.', 'wooahan');
+			}
+		?>
+			<div id="wooahan_setup_wizard">
+				<div class="content">
+					<img src="<?php echo plugins_url('/assets/images/logo-color-svg.svg', WOOAHAN__FILE__);?>" class="logo">
+					<h3>우아한 플러그인 사용에 감사드립니다.</h3>
+					<p class="h3-description">
+						<?php echo $ptext; ?>
+					</p>
+					<div class="required-list">
+						<ul>
+							<?php
+								foreach($required_list as $required){
+							?>
+								<li><?php echo $required['title'];?><span class="checked <?php if($required['status'] == true) : echo 'activated'; endif;?>"><span class="dashicons dashicons-marker"></span></span></li>
+							<?php
+								}
+							?>
+						</ul>
+					</div>
+					<?php 
+						if($this->get_required_plugins_count() == 0){
+					?>
+						<a href="/wp-admin/admin.php?page=wc-settings&tab=wooahan" class="button button-primary">기본설정 바로가기</a> 
+					<?php 
+						} else {
+					?>
+						<a href="/plugins.php?page=tgmpa-install-plugins" class="button button-primary">필수 플러그인 설치</a>
+					<?php
+						}
+					?>
+					<a href="#" class="button" onclick="location.reload()">나중에 하기</a>				
+				</div>
+				<div class="background"></div>
+			</div>
+			<style>
+				div#wooahan_setup_wizard {
+					position:fixed;
+					top:0;
+					left:0;
+					width:100%;
+					height:100%;
+					z-index:999;
+				}
+				div#wooahan_setup_wizard div.content {
+					position:absolute;
+					top:50%;
+					left:50%;
+					width:500px;
+					height:500px;
+					margin-top:-250px;
+					margin-left:-250px;
+					background:#fff;
+					z-index:2;
+					border:10px solid #cfe8f4;
+					box-sizing:border-box;
+					padding:20px;
+					text-align:center;
+				}
+
+				div#wooahan_setup_wizard div.content div.required-list {
+					display:block;
+					border-top:1px solid #e0e0e0;
+					border-bottom:1px solid #e0e0e0;
+					margin-bottom:20px;
+				}
+
+				div#wooahan_setup_wizard div.content div.required-list ul {
+					display:block;
+					padding:0 20px;
+					list-style:decimal;
+				}
+
+				div#wooahan_setup_wizard div.content div.required-list ul li {
+					display:block;
+					text-align:left;
+				}
+
+				div#wooahan_setup_wizard div.content div.required-list ul li span.checked {
+					float:right;
+					color:#d0d0d0;
+				}
+
+				div#wooahan_setup_wizard div.content div.required-list ul li span.checked.activated {
+					color:#39c92f;
+				}
+
+				div#wooahan_setup_wizard div.content img.logo {
+					display:inline-block;
+					width:200px;
+					height:auto;
+					margin-top:20px;
+				}
+				div#wooahan_setup_wizard div.background {
+					position:absolute;
+					top:0;
+					left:0;
+					width:100%;
+					height:100%;
+					background:#000;
+					opacity:0.6;
+					z-index:1;
+				}
+			</style>
+		<?php
 		}
 
 
@@ -301,6 +501,8 @@
 		public function create_wooahan_data(){
 			global $wpdb, $user_ID;
 
+			update_option( 'wooahan_setup_wizard_notice', 1 );
+
 			$form_field_post = array(
 				'post_title' => '배송정보 입력',
 				'post_content' => '[wooahan_address_fields]',
@@ -478,6 +680,7 @@
 					case 'badges' :
 					case 'badges_keys' :
 					case 'attributes' :
+					case 'cat' :
 						$attributes = $val;
 						if(is_array($attributes)){
 							foreach($attributes as $akey => $aval){
@@ -588,8 +791,15 @@
 				update_post_meta($post_id, '_is_badge_use', $badge_use);
 
 				if(is_array($product_cat)){
-					$product_cat = array_unique($product_cat);
-					wp_set_post_terms( $post_id, $product_cat, 'product_cat' );
+					$cats = array();
+					foreach($product_cat as $pcat){
+						foreach($pcat as $cat){
+							$cats[] = $cat;
+						}
+					}
+					$ucats = array_unique($cats);
+					wp_set_post_terms( $post_id, $ucats, 'product_cat' );
+					update_post_meta( $post_id, 'wooahan_product_cats', $product_cat);
 				}
 
 				if(is_array($product_tags)){

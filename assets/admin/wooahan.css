@@ -14,7 +14,7 @@ dd, li {margin-bottom:0}
 input.form-check-input {margin-top:.3rem; margin-left:0; position:relative}
 div.cat-selector { height:160px; border:1px solid #d2d2d2; border-radius:5px; background:#f6f6f6; margin-bottom:20px; overflow-y:scroll }
 div#set-option, div#set-badge { font-size:14px; }
-div#set-option > div.row, div#set-badge > div.row {border-bottom:1px solid #e0e0e0;}
+div#set-basic > div.row, div#set-option > div.row, div#set-badge > div.row {border-bottom:1px solid #e0e0e0;}
 div#set-option > div.row div.col, div#set-badge > div.row div.col {padding-top:10px; padding-bottom:10px}
 div#set-option > div.row div.col-lg-2, div#set-badge > div.row div.col-lg-2 {border-right:1px solid #e0e0e0; background:#f5f5f5}
 div#set-option table.option-table {width:100%;  }
@@ -37,7 +37,7 @@ div#wpbody-content > div.wrap > div.fade.error, div#wpbody-content > div.wrap > 
 
 div.section-wrap h2 {
 	font-size:26px !important;
-	margin:20px 0 0 0 !important;
+	margin:20px 0 20px 0 !important;
 	padding:0 !important;
 }
 
@@ -136,9 +136,7 @@ div#set-basic table.option-table tfoot span.selected-categories ul li + li {
 	border-top:1px dashed #e0e0e0;
 }
 div#set-basic table.option-table tfoot span.selected-categories button {
-	position:absolute;
-	top:0;
-	right:0;
+	float:right;
 }
 div#set-basic table.option-table tfoot span.selected-categories span.selected {
 	display:inline-block;
@@ -620,13 +618,13 @@ div#set-badge div.badge-list ul.badge-ul li.badge.custom div.custom-label span.r
 	cursor:pointer;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul {
+div#set-badge td.added-badges-row ul.added-badges-ul {
 	list-style:none;
 	margin:0;
 	padding:0;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge {
 	display:block;
 	box-sizing:border-box;
 	padding:10px;
@@ -638,49 +636,49 @@ div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge {
 	box-shadow: 1px 1px 3px -1px rgba(0,0,0,0.5);
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge + li.added-badge {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge + li.added-badge {
 	margin-top:5px;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge img {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge img {
 	width:auto;
 	display:inline-block;
 	vertical-align:middle;
 	max-height:29px;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge input[type="text"] {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge input[type="text"] {
 	width:40px;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge input[type="text"] + input[type="text"] {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge input[type="text"] + input[type="text"] {
 	margin-left:5px;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap {
 	float:right;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap span.control-item + span.control-item {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap span.control-item + span.control-item {
 	margin-left:20px;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap span.control-item input.color-input {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap span.control-item input.color-input {
 	width:70px;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap span.control-item.remove-item {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap span.control-item.remove-item {
 	width:22px;
 	text-align:center;
 	display:inline-block;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap span.control-item.remove-item:hover {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge span.control-wrap span.control-item.remove-item:hover {
 	color:#da2128;
 	cursor:pointer;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.badge-move {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge span.badge-move {
 	display:inline-block;
 	width:28px;
 	text-align:center;
@@ -688,14 +686,14 @@ div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.badge-
 }
 
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.badge-priority {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge span.badge-priority {
 	display:inline-block;
 	width:30px;
 	font-weight:bold;
 	line-height:29px;
 }
 
-div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.badge-image {
+div#set-badge td.added-badges-row ul.added-badges-ul li.added-badge span.badge-image {
 	display:inline-block;
 	font-size:0;
 	line-height:29px;
@@ -705,7 +703,7 @@ div#set-badge div.added-badges-row ul.added-badges-ul li.added-badge span.badge-
 div#wooahan-wrap table.product-setting-table {
 	width:100%;
 	border-collapse:collapse;
-	margin-top:30px;
+	
 }
 
 div#wooahan-wrap table.product-setting-table th {
