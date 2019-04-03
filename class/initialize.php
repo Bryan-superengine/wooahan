@@ -20,6 +20,10 @@
 
 			add_action( 'tgmpa_register', array($this, 'wooahan_register_required_plugins') );
 
+			add_filter( 'woocommerce_my_account_my_orders_actions', array($this, 'wooahan_my_account_my_orders_actions'), 10, 2);
+
+			add_filter( 'woocommerce_display_item_meta', array($this, 'wooahan_remove_display_item_meta'), 10, 3);
+
 			$badge_use 		= get_option('wc_settings_tab_wooahan_badge_use', true);
 			$badge_position = get_option('wc_settings_tab_wooahan_badge_position', true);
 
@@ -105,6 +109,51 @@
 			add_filter( 'woocommerce_get_settings_pages', array( $this, 'wooahan_get_settings') );
 
 			add_filter( 'woocommerce_get_availability', array($this, 'wooahan_remove_available_product_message'), 1, 2);
+		}
+
+		/**
+		 * [주문 상세정보에서 wooahan_shipping 메타 키와 내용 표시를 삭제한다.]
+		 * @param  [text] 	$html [뿌려주는 전체 아이템 메타 html]
+		 * @param  [object] $item [아이템 오브젝트]
+		 * @param  [array] 	$args
+		 * @return void
+		 */
+		public function wooahan_remove_display_item_meta( $html, $item, $args ){
+			foreach($item->get_formatted_meta_data() as $meta_id => $meta){
+				if($meta->key != 'wooahan_shipping'){
+ 					$value     = $args['autop'] ? wp_kses_post( $meta->display_value ) : wp_kses_post( make_clickable( trim( $meta->display_value ) ) );
+      				$strings[] = $args['label_before'] . wp_kses_post( $meta->display_key ) . $args['label_after'] . $value;
+      			}
+			}
+		    if ( $strings ) {
+		      $html = $args['before'] . implode( $args['separator'], $strings ) . $args['after'];
+		    }
+			return $html;
+		}
+
+		/**
+		 * @brief  My-account 에 배송중/부분배송중/배송완료 물건에 한하여 배송조회 버튼을 노출시킨다.
+		 *
+		 * @param  array  	$actions 	액션배열
+		 * @param  object 	$order 		주문 오브젝트
+		 * @return array    $actions
+		 */
+		public function wooahan_my_account_my_orders_actions($actions, $order){
+			if($order->get_status() == 'shipping-partial' || $order->get_status() == 'shipping-gone' || $order->get_status() == 'completed'){
+				$order_id = $order->get_id();
+				$shipping_numbers = get_post_meta($order_id, 'wooahan_shipping_number', true);
+
+				if($shipping_numbers){
+					$corp 	= $shipping_numbers[count($shipping_numbers)-1]['corp'];
+					$code 	= $shipping_numbers[count($shipping_numbers)-1]['code'];
+					$number = $shipping_numbers[count($shipping_numbers)-1]['number'];
+					$actions['wooahan-shipping-tracker'] = array(
+						'url' => '/shipping-tracking/'.$code.'/'.$number,
+						'name' => __('배송조회', 'wooahan')
+					);
+				}
+			}
+			return $actions;
 		}
 
 		public function wooahan_register_required_plugins(){
@@ -587,6 +636,10 @@
 				wp_localize_script( 'wooahan-formfields', 'wooahanAjax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ));
 			wp_enqueue_style( 'wooahan-common', plugins_url('/assets/css/wooahan.common.css', WOOAHAN__FILE__), '', date('His') );
 			wp_enqueue_style ( 'dashicons' );
+
+			if(is_account_page()){
+				wp_enqueue_script( 'shipping-tracker', plugins_url('/assets/js/shipping.tracker.js', WOOAHAN__FILE__), array('jquery'), date('His') );
+			}
 		}
 
 		/**
