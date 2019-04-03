@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php /* translators: %s: Customer first name */ ?>
-<p><?php printf( esc_html__( '%s 상품 구매에 감사드립니다.', 'wooahan' ), esc_html( $order->get_billing_first_name() ) ); ?></p>
+<p><?php printf( esc_html__( '%s님, 상품 구매에 감사드립니다.', 'wooahan' ), esc_html( $order->get_billing_first_name() ) ); ?></p>
 <?php /* translators: %s: Order number */ ?>
 <p><?php printf( esc_html__( '고객님의 %s 주문이 현재 부분배송중에 있습니다. 잔여상품은 준비되는 즉시 바로 보내드리도록 하겠습니다.', 'wooahan' ), esc_html( $order->get_order_number() ) ); ?></p>
 
