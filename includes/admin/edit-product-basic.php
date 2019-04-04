@@ -190,11 +190,11 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 				<td class="sep2">
 		  	<div class="uploaded-image uploaded-gallery">
 				<?php
-					$galleries = get_post_meta($post->ID, '_product_image_gallery', true);
+					$galleries 		= get_post_meta($post->ID, '_product_image_gallery', true);
+					$count 			= 0;
+					$gallery_html 	= '';
 					if($galleries){
 						$galleries = explode(",", $galleries);
-						$gallery_html = '';
-						$count = 0;
 						foreach($galleries as $gallery){
 							$url = wp_get_attachment_image_src( $gallery, 'thumbnail' );
 							$gallery_html .= '<span class="gallery"><span class="gallery-wrapper"><img src="'.$url[0].'" class="gallery"><input type="hidden" name="wooahan[gallery][]" value="'.$gallery.'"><span class="remove" data-none-image="'.plugins_url('/assets/images/gallery-svg.svg', WOOAHAN__FILE__).'"><img src="'.plugins_url('/assets/images/exit-svg.svg', WOOAHAN__FILE__).'"></span></span></span>';

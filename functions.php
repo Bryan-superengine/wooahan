@@ -1139,6 +1139,9 @@ function wooahan_direct_buy(){
         }
 
         if($order){
+
+            update_post_meta($order->get_id(), '_payment_method', 'wooahan-holding');
+
             $result['status']      = 'success';
             // 개인정보, 배송, 청구 주소등 변경하는 페이지를 먼저 불러온 후 콜백을 넘겨준다.
             // 상품 타입에 맞게 배송/청구 폼은 나타나지 않을수도 있다.

@@ -528,7 +528,7 @@
 					}
 
 				echo '<input type="hidden" name="is_variable" value="'.$product_type.'">';
-				echo '<input type="hidden" name="product_id" value="'.$product->get_id().'">';
+				//echo '<input type="hidden" name="product_id" value="'.$product->get_id().'">';
 				if($product_type == 'true'){
 					echo '<button type="button" class="button direct-buy button-direct-buy" v-on:click="direct_buy">바로구매</button>';
 				} else {

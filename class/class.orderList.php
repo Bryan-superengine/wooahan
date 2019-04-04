@@ -436,6 +436,9 @@
 				case 'programmatically' :
 					$text = __('임의등록', 'wooahan');
 				break;
+				case 'wooahan-holding' :
+					$text = __('구매대기', 'wooahan');
+				break;
 				default :
 					$text = $method;
 				break;
