@@ -80,6 +80,65 @@ function wooahan_order_items($order){
     return $new_order_items;
 }
 
+add_action( 'wp_ajax_wooahan_kakao_message_send', 'wooahan_kakao_message_send' );
+
+function wooahan_kakao_message_send(){
+    $result['status'] = 'failed';
+    $bizMessage = new wooahanMessage();
+    $response   = $bizMessage->send(997, 'T00006');
+    if(isset($response['response'])){
+        if($status == 200){
+            $body = json_decode($response['body']);
+            $result['status'] = 'success';
+            $result['result_code'] = $body->result_code;
+        }
+    }
+    echo json_encode($response);
+    exit();
+}
+
+add_action( 'wp_ajax_wooahan_pin_number_verification', 'wooahan_pin_number_verification' );
+
+function wooahan_pin_number_verification(){
+    $result['status'] = 'failed';
+    $sendnumber     = sanitize_text_field($_POST['sendnumber']);
+    $pinnumber      = sanitize_text_field($_POST['pinnumber']);
+    $bizMessage = new wooahanMessage();
+    $response   = $bizMessage->pinVerification($sendnumber, $pinnumber);
+    if(isset($response['response'])){
+        $status = $response['response']['code'];
+        if($status == 200){
+            $body = json_decode($response['body']);
+            $result['status'] = 'success';
+            $result['result_code'] = $body->result_code;
+            $result['message'] = $bizMessage->resultMessage($body->result_code);
+        }
+    }
+    echo json_encode($result);
+    exit();
+}
+
+add_action( 'wp_ajax_wooahan_get_kakao_pin_number', 'wooahan_get_kakao_pin_number' );
+
+function wooahan_get_kakao_pin_number(){
+    $result['status'] = 'failed';
+    $number     = sanitize_text_field($_POST['number']);
+    $bizMessage = new wooahanMessage();
+    $response   = $bizMessage->getPincode($number);
+    if(isset($response['response'])){
+        $status = $response['response']['code'];
+        if($status == 200){
+            $body = json_decode($response['body']);
+            $result['status'] = 'success';
+            $result['result_code'] = $body->result_code;
+            $result['message'] = $bizMessage->resultMessage($body->result_code);
+        }
+    }
+    echo json_encode($result);
+    exit();
+}
+
+
 add_action( 'wp_ajax_ckeditor_image_upload', 'ckeditor_image_upload' );
 
 function ckeditor_image_upload(){
@@ -1139,6 +1198,9 @@ function wooahan_direct_buy(){
         }
 
         if($order){
+
+            update_post_meta($order->get_id(), '_payment_method', 'wooahan-holding');
+
             $result['status']      = 'success';
             // 개인정보, 배송, 청구 주소등 변경하는 페이지를 먼저 불러온 후 콜백을 넘겨준다.
             // 상품 타입에 맞게 배송/청구 폼은 나타나지 않을수도 있다.

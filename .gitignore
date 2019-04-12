@@ -4,3 +4,11 @@ sftp-config.json
 assets/admin/shop.order.css.map
 
 assets/admin/.sass-cache/940cb3d013403389f5f626256efd2859bb7c3367/shop.order.scssc
+
+*.map
+
+*.scssc
+
+*.map
+
+assets/css/wooahan.form.fields.css.map

@@ -6,9 +6,19 @@
 		public $shippingReady;
 		public $pageCount;
 		public $status;
-
+		public $defaultCorp;
 		function __construct(){
+			$defaultCorp = $this->get_default_corp();
+		}
 
+
+		/**
+		 * [설정된 택배사를 불러온다.]
+		 * @return [varchar] $corp [택배사 코드]
+		 */
+		public function get_default_corp(){
+			$corp = get_option('wc_settings_tab_wooahan_tcorp', true);
+			return $corp;
 		}
 
 		/**
@@ -435,6 +445,9 @@
 				break;
 				case 'programmatically' :
 					$text = __('임의등록', 'wooahan');
+				break;
+				case 'wooahan-holding' :
+					$text = __('구매대기', 'wooahan');
 				break;
 				default :
 					$text = $method;

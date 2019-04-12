@@ -191,6 +191,6 @@
 	}
 
 	if( is_admin() ){
-		new wooahanUpdater( WOOAHAN__FILE__, 'Bryan-superengine', 'wooahan', 'dc025a18c313707d4a15a0c36653c97e956619d2');
+		new wooahanUpdater( WOOAHAN__FILE__, 'Bryan-superengine', 'wooahan', '');
 	}
 ?>

@@ -24,6 +24,8 @@
 
 			add_filter( 'woocommerce_display_item_meta', array($this, 'wooahan_remove_display_item_meta'), 10, 3);
 
+			add_action( 'wp_print_scripts', array($this, 'wooahan_dequeue_script'), 100 );
+
 			$badge_use 		= get_option('wc_settings_tab_wooahan_badge_use', true);
 			$badge_position = get_option('wc_settings_tab_wooahan_badge_position', true);
 
@@ -109,6 +111,18 @@
 			add_filter( 'woocommerce_get_settings_pages', array( $this, 'wooahan_get_settings') );
 
 			add_filter( 'woocommerce_get_availability', array($this, 'wooahan_remove_available_product_message'), 1, 2);
+		}
+
+		/**
+		 * 아임포트에서는 네이버페이 상품페이지 버튼 클릭시 variation 을 하나만 등록시킨다. 따라서 기존 JS 스크립트를 dequeue 하고 새롭게 집어넣는다.
+		 * @return void
+		 */
+		public function wooahan_dequeue_script(){
+			//wp_deregister_script('iamport_naverpay_for_woocommerce');
+			//wp_register_script( 'iamport_naverpay_for_woocommerce', plugins_url( '/assets/js/iamport.naverpay.js', WOOAHAN__FILE__ ), array('jquery', 'woocommerce_iamport_script', 'naverpay_script'), date('His'));
+			//wp_enqueue_script( 'iamport_naverpay_for_woocommerce' );
+			//wp_register_script( 'wooahan_naverpay_for_woocommerce', plugins_url( '/assets/js/iamport.naverpay.js', WOOAHAN__FILE__ ), array('jquery', 'woocommerce_iamport_script', 'naverpay_script'), date('His'));
+			//wp_enqueue_script( 'wooahan_naverpay_for_woocommerce' );
 		}
 
 		/**
@@ -528,7 +542,7 @@
 					}
 
 				echo '<input type="hidden" name="is_variable" value="'.$product_type.'">';
-				echo '<input type="hidden" name="product_id" value="'.$product->get_id().'">';
+				//echo '<input type="hidden" name="product_id" value="'.$product->get_id().'">';
 				if($product_type == 'true'){
 					echo '<button type="button" class="button direct-buy button-direct-buy" v-on:click="direct_buy">바로구매</button>';
 				} else {

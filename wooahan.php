@@ -3,7 +3,7 @@
  * Plugin Name: Wooahan
  * Description: 우커머스의 상품 등록부터 택배발송, 주문처리까지 보다 직관적인 UI 와 한국 실정에 맞는 다양한 기능이 들어 있습니다.
  * Plugin URI: http://superengine.io/wooahan/
- * Version: 0.0.2
+ * Version: 0.1.0
  * Author : Mr. Bryan Lee
  * Author URI: http://superengine.io
  *
@@ -24,6 +24,8 @@ require_once( WOOAHAN_PATH . 'class/class.shopOrder.php' );
 require_once( WOOAHAN_PATH . 'class/class.orderList.php' );
 require_once( WOOAHAN_PATH . 'class/class.orderTracking.php' );
 require_once( WOOAHAN_PATH . 'class/class.shipping.php' );
+//require_once( WOOAHAN_PATH . 'class/class.iamport.naverpay.php' );
+require_once( WOOAHAN_PATH . 'class/class.biz.message.php' );
 require_once( WOOAHAN_PATH . 'functions.php' );
 require_once( WOOAHAN_PATH . 'class/class.badge.php' );
 require_once( WOOAHAN_PATH . 'class/class-tgm-plugin-activation.php' );
