@@ -83,6 +83,8 @@ jQuery(document).ready(function(){
 	jQuery("button.button-pay").click(function(){
 		if(jQuery("div#wooahan-form-fields").length){
 
+			jQuery("div#wooahan-order-pay").find("div.wooahan-pay-loader").show();
+
 			var receiver 	= '';
 			var location 	= '';
 			var phone1_1	= '';
@@ -174,6 +176,7 @@ jQuery(document).ready(function(){
 				},
 				success : function( response ){;
 					//console.log(response);
+					jQuery("div#wooahan-order-pay").find("div.wooahan-pay-loader").hide();
 					form.submit();
 				},
 				complete : function(){

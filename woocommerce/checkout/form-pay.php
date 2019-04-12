@@ -29,6 +29,10 @@ if($shipping_cost == 0){
 
 ?>
 <div id="wooahan-order-pay">
+<div class="wooahan-pay-loader">
+	<div class="content">결제모듈을 불러오고 있습니다. 잠시만 기다려주세요~!</div>
+	<div class="background"></div>
+</div>
 <form id="order_review" method="post">
 	<table class="shop-table wooahan-order-pay-table">
 		<thead>

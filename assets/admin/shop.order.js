@@ -658,7 +658,7 @@ jQuery(document).ready(function(){
 						if(response.status == 'success'){
 							//console.log(response.data);
 							self.items = response.data;
-							console.log(response.data);
+							//console.log(response.data);
 							self.count = response.orderCount;
 							self.totalCount = response.count;
 							self.listCount = self.size(response.data);

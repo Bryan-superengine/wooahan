@@ -5,6 +5,7 @@
 	$orderList = new wooahanOrderList();
 	$trackingCompanies = $orderList->get_tracking_companies();
 	$orderCount 	   = $orderList->get_order_count();
+	$defaultCorp 	   = $orderList->get_default_corp();
 ?>
 <div id="wooahanShopOrder" order-count='<?php echo json_encode($orderCount);?>' v-cloak>
 	<!-- Modal -->
@@ -101,9 +102,10 @@
 								<div v-show="(orderStatus == 'wc-shipping-standby' || orderStatus == 'wc-shipping-partial') || (orderStatus == 'wc-exchange-request' &&  details.return_received == 'yes')" class="shipping-number-add-box">
 									<select class="select-corp">
 									<?php
+
 										foreach($trackingCompanies as $company){
 									?>
-										<option value="<?php echo $company['code'];?>"><?php echo $company['name'];?></option>
+										<option value="<?php echo $company['code'];?>" <?php if($defaultCorp == $company['code']) : echo 'selected'; endif; ?>><?php echo $company['name'];?></option>
 									<?php
 										}
 									?>
